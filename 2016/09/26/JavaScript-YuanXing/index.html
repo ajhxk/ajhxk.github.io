@@ -1,0 +1,1013 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript原型," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="当在JavaScript世界中走过不少旅程之后。再次萌发起研究这部分知识的欲望，翻阅了不少书籍和资料，才搞懂__porto__和prototype的概念。 一切皆为对象 殊不知，JavaScript世界的对象，追根溯源来自于一个null。 万物初生时，一个null对象，凭空而生，接着Object、Function学着null的模样塑造了自己，并且它们彼此之间喜结连理，提供了prototype和co">
+<meta name="keywords" content="JavaScript原型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript原型">
+<meta property="og:url" content="https://www.ajhxk.cn/2016/09/26/JavaScript-YuanXing/index.html">
+<meta property="og:site_name" content="ajhxk">
+<meta property="og:description" content="当在JavaScript世界中走过不少旅程之后。再次萌发起研究这部分知识的欲望，翻阅了不少书籍和资料，才搞懂__porto__和prototype的概念。 一切皆为对象 殊不知，JavaScript世界的对象，追根溯源来自于一个null。 万物初生时，一个null对象，凭空而生，接着Object、Function学着null的模样塑造了自己，并且它们彼此之间喜结连理，提供了prototype和co">
+<meta property="og:image" content="http://odu8dcfmn.bkt.clouddn.com/__proto__.png">
+<meta property="og:image" content="http://odu8dcfmn.bkt.clouddn.com/prototype.png">
+<meta property="og:image" content="http://odu8dcfmn.bkt.clouddn.com/%E4%B8%80%E5%BC%A0%E5%8E%86%E5%8F%B2%E6%82%A0%E4%B9%85%E7%9A%84%E5%9B%BE.png">
+<meta property="og:updated_time" content="2016-09-26T09:21:02.894Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript原型">
+<meta name="twitter:description" content="当在JavaScript世界中走过不少旅程之后。再次萌发起研究这部分知识的欲望，翻阅了不少书籍和资料，才搞懂__porto__和prototype的概念。 一切皆为对象 殊不知，JavaScript世界的对象，追根溯源来自于一个null。 万物初生时，一个null对象，凭空而生，接着Object、Function学着null的模样塑造了自己，并且它们彼此之间喜结连理，提供了prototype和co">
+<meta name="twitter:image" content="http://odu8dcfmn.bkt.clouddn.com/__proto__.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.ajhxk.cn/2016/09/26/JavaScript-YuanXing/"/>
+
+
+
+
+
+  <title> JavaScript原型 | ajhxk </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f51db4fef14d8fb9de9619148b302182";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ajhxk</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.ajhxk.cn/2016/09/26/JavaScript-YuanXing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="ajhxk">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.JPG">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ajhxk">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                JavaScript原型
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-26T17:20:04+08:00">
+                2016-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/09/26/JavaScript-YuanXing/" class="leancloud_visitors" data-flag-title="JavaScript原型">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>当在JavaScript世界中走过不少旅程之后。再次萌发起研究这部分知识的欲望，翻阅了不少书籍和资料，才搞懂__porto__和prototype的概念。</p>
+<h1 id="一切皆为对象"><a href="#一切皆为对象" class="headerlink" title="一切皆为对象"></a>一切皆为对象</h1><blockquote>
+<p>殊不知，JavaScript世界的对象，追根溯源来自于一个null。</p>
+<p>万物初生时，一个null对象，凭空而生，接着Object、Function学着null的模样塑造了自己，并且它们彼此之间喜结连理，提供了prototype和constructor，一个给子孙提供了基因，一个则制造万千子孙。</p>
+<p>在JS中，null也是作为一个对象存在，基于它基础的子子孙孙，当属对象。乍一看，null像是上帝，而Object和Function犹如JavaScript世界中的亚当与夏娃。</p>
+</blockquote>
+<h1 id="原型指针-proto"><a href="#原型指针-proto" class="headerlink" title="原型指针__proto__"></a>原型指针__proto__</h1><p>在JavaScript中，每个对象都拥有一个原型对象，而指向该原型对象的内部则是__proto__,通过它可以从中继承原型对象的属性，原型是JavsScript中的基因链接，有了这个，才能知道这个对象的祖祖辈辈。从对象中的__porto__可以访问到他所继承的原型对象。<br><a id="more"></a><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">a.__proto__ === <span class="built_in">Array</span>.prototype <span class="comment">//true</span></div></pre></td></tr></table></figure></p>
+<p>上面代码中，创建了一个Array的实列a,该实例的原型指向了Array.prototype。<br>Array.prototype本身也是一个对象，也有继承的原型：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">a.__proto__.__proto__ === <span class="built_in">Object</span>.prototype  <span class="comment">// true</span></div><div class="line"><span class="comment">// 等同于 Array.prototype.__proto__ === Object.prototype</span></div></pre></td></tr></table></figure></p>
+<p>这就说明了，Array本身也是继承自Object的，那么Object的原型指向的是谁呢？<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line">a.__proto__.__proto__.__proto__ === <span class="literal">null</span>  <span class="comment">// true</span></div><div class="line"><span class="comment">// 等同于 Object.prototype.__proto__ === null</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://odu8dcfmn.bkt.clouddn.com/__proto__.png" alt="\__porto\__"></p>
+<p>所以说，Javascript中的对象，追根溯源都是来自于一个null对象。佛曰：万物皆空，善哉善哉。</p>
+<p>除了使用.__porto__方式访问对象的原型，还可以通过Object.getPrototypeOf方法来获取对象的原型，以及通过Object.setPrototypeOf方法来重写对象的原型。</p>
+<blockquote>
+<p>值得注意的是，按照语言标准，__porto__属性只有浏览器才需要部署，其他环境可以没有这个属性，而且前后的两个下划线，表示其本质是一个内部属性，不应该对使用者暴露。因此，应该尽量少用这个属性，而是用<strong>Object.getPrototypeOf</strong>和<strong>Object.setPrototypeOf</strong>,进行原型对象的读写操作。这里__porto__属性来描述对象中的原型，是因为这样来得更加形象，而且容易理解。</p>
+</blockquote>
+<h1 id="原型对象-prototype"><a href="#原型对象-prototype" class="headerlink" title="原型对象 prototype"></a>原型对象 prototype</h1><p>函数作为JavaScript中的一等公民，它既是函数又是对象，函数的原型指向的是Function.prototype<br><figure class="highlight javascript"><figcaption><span>函数实例的原型</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">Foo.__proto__ === <span class="built_in">Function</span>.prototype <span class="comment">// true</span></div></pre></td></tr></table></figure></p>
+<p>函数实例除了拥有__porto__属性之外，还拥有prototype属性。通过该函数构造的新的实例对象，其原型指针__porto__会指向该函数的prototype属性。<br><figure class="highlight javascript"><figcaption><span>函数实例的prototype属性</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> Foo();</div><div class="line">a.__proto__ === Foo.prototype; <span class="comment">// true</span></div></pre></td></tr></table></figure></p>
+<p>而函数的prototype属性，本身是一个由Object构造的实列对象。<br><figure class="highlight javascript"><figcaption><span>函数实例的prototype属性指向的对象</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line">Foo.prototype.__proto__ === <span class="built_in">Object</span>.prototype; <span class="comment">// true</span></div></pre></td></tr></table></figure></p>
+<p>prototype属性很特殊，它还有一个隐式的constructor,指向了构造函数本身。<br><figure class="highlight javascript"><figcaption><span>函数实例的prototype属性指向的对象的constructor属性</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Foo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;</div><div class="line"><span class="keyword">var</span> a = <span class="keyword">new</span> Foo();</div><div class="line">Foo.prototype.constructor === Foo; <span class="comment">// true</span></div><div class="line">a.constructor === Foo; <span class="comment">// true</span></div><div class="line">a.constructor === Foo.prototype.constructor; <span class="comment">// true</span></div></pre></td></tr></table></figure></p>
+<p><img src="http://odu8dcfmn.bkt.clouddn.com/prototype.png" alt="prototype"></p>
+<blockquote>
+<p>PS:<strong>a.construcror</strong>属性并不属于a（a.hasOwnProperty(“constructor”) === false），而是读取的a.__proto__.constructor，所以上图用虚线表示a.constructor，方便理解。</p>
+</blockquote>
+<h1 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h1><p><strong>概念：</strong><br>原型链作为实现继承的主要方法，其基本思想是利用原型让一个引用类型继承另一个引用类型的属性和方法。<br>每个构造函数都有一个原型对象(prototype),原型对象都包含一个指向构造函数的指针(constructor),而实例都包含一个指向原型对象的内部指针(__proto__)。</p>
+<p>那么，假如我们让原型对象等于另一个类型的实列，此时的原型对象将包含一个指向另一个原型的指针，相应的，另一个原型中也包含着一个指向另一个构造函数的指针。假如另一个原型又是另一个类型的实例，那么上述关系依然成立。如此层层递进，就构造了实例与原型的链条，这就是原型链的基本概念。</p>
+<p><strong>意义：</strong><br>“原型链”的作用在于，当读取对象的某个属性时，JavaScript引擎先寻找对象本身的属性，如果找不到，就到它的原型去找，如果还是找不到，就到原型的原型去找。以此类推，如果直到最顶层的Object.prototype还是找不到，则返回undefine。</p>
+<p><strong>亲子鉴定</strong><br>在JavaScript中，也存在鉴定亲子之间DNA关系的方法：</p>
+<ol>
+<li><strong>instanceof</strong> 运算符返回一个布尔值，表示一个对象是否由某个构造函数创建。</li>
+<li><strong>Object.isPrototypeOf()</strong> 只要某个对象处在原型链上，isProtypeOf都返回true<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Bar = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;,</div><div class="line">    b = <span class="keyword">new</span> Bar();</div><div class="line">    b <span class="keyword">instanceof</span> Bar <span class="comment">// true</span></div><div class="line">    Bar.prototype.isPrototypeOf(b) <span class="comment">// true</span></div><div class="line">    <span class="built_in">Object</span>.prototype.isPrototypeOf(Bar) <span class="comment">// true</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>要注意，实例b的原型是Bar.prototype而不是Bar</p>
+<h1 id="一张历史悠久的图"><a href="#一张历史悠久的图" class="headerlink" title="一张历史悠久的图"></a>一张历史悠久的图</h1><p><img src="http://odu8dcfmn.bkt.clouddn.com/%E4%B8%80%E5%BC%A0%E5%8E%86%E5%8F%B2%E6%82%A0%E4%B9%85%E7%9A%84%E5%9B%BE.png" alt="一张历史悠久的图"></p>
+<p>这是一张描述了Object、Function以及一个函数实例Foo于他们原型之间的联系。如果理解了上面的概念。这张图是不难读懂。</p>
+<p>从上图中，能看到一个有趣的地方。</p>
+<ol>
+<li>Function.prototype._proto__指向了Object.prototype，这说明Function.prototype是一个Object实例，那么应当是先有的Object再有Function。</li>
+<li>但是Object.prototype.constructor.__proto__又指向了Function.prototype。这样看来，没有Function，Object也不能创建实例。</li>
+</ol>
+<p>这就产生了一种类「先有鸡还是先有蛋」的经典问题，到底是先有的Object还是先有的Function呢？<br>这么哲学向的问题，留给你思考了。</p>
+<p>我只是感慨：越往JavaScript的深处探索，越觉得这一门语言很哲学。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript原型/" rel="tag"># JavaScript原型</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/22/JavaScriptDesignPattern/" rel="next" title="JavaScript设计模式与开发实践--记录">
+                <i class="fa fa-chevron-left"></i> JavaScript设计模式与开发实践--记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/09/JavaScriptInherit/" rel="prev" title="JavaScript继承">
+                JavaScript继承 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.JPG"
+               alt="ajhxk" />
+          <p class="site-author-name" itemprop="name">ajhxk</p>
+           
+              <p class="site-description motion-element" itemprop="description">鸟儿之所以敢站在高枝上 <br> 不是因为高枝有多坚固<br> 而是相信自己的翅膀<br></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一切皆为对象"><span class="nav-number">1.</span> <span class="nav-text">一切皆为对象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型指针-proto"><span class="nav-number">2.</span> <span class="nav-text">原型指针__proto__</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型对象-prototype"><span class="nav-number">3.</span> <span class="nav-text">原型对象 prototype</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#原型链"><span class="nav-number">4.</span> <span class="nav-text">原型链</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一张历史悠久的图"><span class="nav-number">5.</span> <span class="nav-text">一张历史悠久的图</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">ajhxk</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("OmG1nqJJpd9qJN6sVirR8dYd-gzGzoHsz", "bX4hRO0wKJY5JxquE9YH3DlJ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

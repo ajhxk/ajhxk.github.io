@@ -30,10 +30,10 @@
             return;
         }
         if (_isPC && -1 !== _url.indexOf('mobile')) {
-            window.location.href = '/pc/index.html?isJudeg=true';
+            window.location.href = './pc/index.html?isJudeg=true';
         }
         else if(!_isPC && -1 !== _url.indexOf('pc')){
-            window.location.href = '/mobile/page/index.html?isJudeg=true';
+            window.location.href = './mobile/page/index.html?isJudeg=true';
         }
     }
 

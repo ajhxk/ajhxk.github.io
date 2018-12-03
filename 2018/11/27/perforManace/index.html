@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://www.ajhxk.cn/2018/11/27/perforManace/index.html">
 <meta property="og:site_name" content="ajhxk">
 <meta property="og:description" content="以下是关于页面性能的一些整理： 提升页面性能的方法：1、资源压缩合并，减少HTTP请求，开启gzip压缩2、非核心代码异步加载 -&amp;gt; 异步加载的方式 -&amp;gt; 异步加载的区别3、利用浏览器缓存 -&amp;gt; 缓存的分类 -&amp;gt; 缓存的原理4、使用cdn5、预解析DNS 2、非核心代码异步加载 -&amp;gt; 异步加载的方式 -&amp;gt; 异步加载的区别1、异步加载的方式：    1) 动态脚本">
-<meta property="og:updated_time" content="2018-12-03T12:24:26.773Z">
+<meta property="og:updated_time" content="2018-12-03T12:36:41.427Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="perforManace">
 <meta name="twitter:description" content="以下是关于页面性能的一些整理： 提升页面性能的方法：1、资源压缩合并，减少HTTP请求，开启gzip压缩2、非核心代码异步加载 -&amp;gt; 异步加载的方式 -&amp;gt; 异步加载的区别3、利用浏览器缓存 -&amp;gt; 缓存的分类 -&amp;gt; 缓存的原理4、使用cdn5、预解析DNS 2、非核心代码异步加载 -&amp;gt; 异步加载的方式 -&amp;gt; 异步加载的区别1、异步加载的方式：    1) 动态脚本">
@@ -378,7 +378,7 @@
       
         <p>以下是关于页面性能的一些整理：</p>
 <p>提升页面性能的方法：<br>1、资源压缩合并，减少HTTP请求，开启gzip压缩<br>2、非核心代码异步加载 -&gt; 异步加载的方式 -&gt; 异步加载的区别<br>3、利用浏览器缓存 -&gt; 缓存的分类 -&gt; 缓存的原理<br>4、使用cdn<br>5、预解析DNS</p>
-<h2 id="2、非核心代码异步加载-gt-异步加载的方式-gt-异步加载的区别"><a href="#2、非核心代码异步加载-gt-异步加载的方式-gt-异步加载的区别" class="headerlink" title="2、非核心代码异步加载 -&gt; 异步加载的方式 -&gt; 异步加载的区别"></a>2、非核心代码异步加载 -&gt; 异步加载的方式 -&gt; 异步加载的区别</h2><p>1、异步加载的方式：<br>    1) 动态脚本加载   2)defer 3)async<br>2、异步加载的区别<br>    1)defer是在HTML解析完之后才会执行,如果是多个，按照加载的顺序依次执行<br>    2)async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</p>
+<h2 id="2、非核心代码异步加载-gt-异步加载的方式-gt-异步加载的区别"><a href="#2、非核心代码异步加载-gt-异步加载的方式-gt-异步加载的区别" class="headerlink" title="2、非核心代码异步加载 -&gt; 异步加载的方式 -&gt; 异步加载的区别"></a>2、非核心代码异步加载 -&gt; 异步加载的方式 -&gt; 异步加载的区别</h2><p>1、异步加载的方式：<br>    1) 动态脚本加载   2)defer  3)async<br>     <a id="more"></a><br>2、异步加载的区别<br>    1)defer是在HTML解析完之后才会执行,如果是多个，按照加载的顺序依次执行<br>    2)async是在加载完之后立即执行，如果是多个，执行顺序和加载顺序无关</p>
 <h2 id="3、利用浏览器缓存-gt-缓存的分类-gt-缓存的原理"><a href="#3、利用浏览器缓存-gt-缓存的分类-gt-缓存的原理" class="headerlink" title="3、利用浏览器缓存 -&gt; 缓存的分类 -&gt; 缓存的原理"></a>3、利用浏览器缓存 -&gt; 缓存的分类 -&gt; 缓存的原理</h2><p><b>1、缓存的分类:</b><br>1)强缓存(下次访问该资源时,直接使用缓存)<br>&emsp;&emsp;<b>Expires(过期时间)</b> Expires:Thu,21 Jan 2017 23:39:02 GMT 表示的是绝对时间(服务器的时间，可能会存在服务器与客户端时间不一致)<br>&emsp;&emsp;<b>Cache-Control</b> Cache-Control:max-age=3600 表示的是客户端的是相对时间，单位是秒;<br>2)协商缓存<br>&emsp;&emsp;<b>Last-Modified If-Modified-Since</b> Last-Modified: Web,26 Jan 2017 00:35:11 GMT<br>&emsp;&emsp;<b>Etag If-None-Match</b></p>
 <p><b>2、强缓存:</b><br>&emsp;&emsp;加载资源的时候服务器在响应头中带上Cache-Control、Expires用来表示资源的过期时间(Cache-Control的优先级更高)。<br><b>2.1 Expires</b><br>&emsp;&emsp;Expires是http1.0的规范，它的值是一个绝对时间的GMT格式的时间字符串。如我现在这个网页的Expires值是：expires:Fri, 14 Apr 2017 10:47:02 GMT。这个时间代表这这个资源的失效时间，只要发送请求时间是在Expires之前，那么本地缓存始终有效，则在缓存中读取数据。所以这种方式有一个明显的缺点，由于失效的时间是一个绝对时间，所以当服务器与客户端时间偏差较大时，就会导致缓存混乱<br><b>2.2 Cache-Control</b><br>&emsp;&emsp;Cache-Control是在http1.1中出现的，主要是利用该字段的<b>max-age</b>值来进行判断，它是一个相对时间，例如Cache-Control:max-age=3600，代表着资源的有效期是3600秒。cache-control除了该字段外，还有下面几个比较常用的设置值：<br>&emsp;&emsp;<b>no-cache</b>：不使用本地缓存。需要使用缓存协商，先与服务器确认返回的响应是否被更改，如果之前的响应中存在ETag，那么请求的时候会与服务端验证，如果资源未被更改，则可以避免重新下载。<br>&emsp;&emsp;<b>no-store</b>：直接禁止游览器缓存数据，每次用户请求该资源，都会向服务器发送一个请求，每次都会下载完整的资源。<br>&emsp;&emsp;<b>public</b>：可以被所有的用户缓存，包括终端用户和CDN等中间代理服务器。<br>&emsp;&emsp;<b>private</b>：只能被终端用户的浏览器缓存，不允许CDN等中继缓存服务器对其缓存。<br>&emsp;&emsp;<b>Cache-Control与Expires</b>可以在服务端配置同时启用，同时启用的时候Cache-Control优先级高。</p>
 <p><b>3、协商缓存:</b><br>&emsp;&emsp;协商缓存就是由服务器来确定缓存资源是否可用，所以客户端与服务器端要通过某种标识来进行通信，从而让服务器判断请求资源是否可以缓存访问。<br><b>Last-Modify/If-Modify-Since</b><br>&emsp;&emsp;浏览器第一次请求一个资源的时候，服务器返回的header中会加上Last-Modify，Last-modify是一个时间标识该资源的最后修改时间，例如Last-Modify: Thu,31 Dec 2037 23:59:59 GMT。</p>
@@ -391,6 +391,9 @@
 <p>&emsp;&emsp;如果没有命中缓存，则返回200，返回资源内容，并且更新ETag</p>
 <p><b>4、为什么要有Etag</b></p>
 <p>&emsp;&emsp;你可能会觉得使用Last-Modified已经足以让浏览器知道本地的缓存副本是否足够新，为什么还需要Etag呢？HTTP1.1中Etag的出现主要是为了解决几个Last-Modified比较难解决的问题：<br>&emsp;&emsp;一些文件也许会周期性的更改，但是他的内容并不改变(仅仅改变的修改时间)，这个时候我们并不希望客户端认为这个文件被修改了，而重新GET；<br>&emsp;&emsp;某些文件修改非常频繁，比如在秒以下的时间内进行修改，(比方说1s内修改了N次)，If-Modified-Since能检查到的粒度是s级的，这种修改无法判断(或者说UNIX记录MTIME只能精确到秒)；<br>&emsp;&emsp;某些服务器不能精确的得到文件的最后修改时间。<br>Last-Modified与ETag是可以一起使用的，服务器会优先验证ETag，一致的情况下，才会继续比对Last-Modified，最后才决定是否返回304。</p>
+<h2 id="5、预解析DNS"><a href="#5、预解析DNS" class="headerlink" title="5、预解析DNS"></a>5、预解析DNS</h2><p>5.1:</p>
+<p><meta rel="dns-prefetch" href="//host_name_to_prefetch.com"><br>预解析某域名<br>5.2:</p>
+<p><meta http-equiv="x-dns-prefetch-control" content="on"><br>a标签一般默认开启dns预解析功能，但在https下是默认未开启的，此标签是用来强制开始a标签的dns预解析功能</p>
 
       
     </div>
@@ -555,7 +558,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2、非核心代码异步加载-gt-异步加载的方式-gt-异步加载的区别"><span class="nav-number">1.</span> <span class="nav-text">2、非核心代码异步加载 -> 异步加载的方式 -> 异步加载的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、利用浏览器缓存-gt-缓存的分类-gt-缓存的原理"><span class="nav-number">2.</span> <span class="nav-text">3、利用浏览器缓存 -> 缓存的分类 -> 缓存的原理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#2、非核心代码异步加载-gt-异步加载的方式-gt-异步加载的区别"><span class="nav-number">1.</span> <span class="nav-text">2、非核心代码异步加载 -> 异步加载的方式 -> 异步加载的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3、利用浏览器缓存-gt-缓存的分类-gt-缓存的原理"><span class="nav-number">2.</span> <span class="nav-text">3、利用浏览器缓存 -> 缓存的分类 -> 缓存的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5、预解析DNS"><span class="nav-number">3.</span> <span class="nav-text">5、预解析DNS</span></a></li></ol></div>
             
 
           </div>
